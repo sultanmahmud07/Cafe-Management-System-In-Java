@@ -1,0 +1,214 @@
+package com.java1234.view;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import com.java1234.dao.UserDao;
+import com.java1234.model.User;
+import com.java1234.util.DbUtil;
+
+public class SignupPage extends JFrame {
+
+    private JTextField nameTxt;
+    private JTextField emailTxt;
+    private JTextField mobileTxt;
+    private JTextField addressTxt;
+    private JPasswordField passwordTxt;
+    private JTextField sqTxt;
+    private JTextField answerTxt;
+    
+    private DbUtil dbUtil = new DbUtil();
+    private UserDao userDao = new UserDao();
+
+    public SignupPage() {
+        setTitle("Signup");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Full screen
+        getContentPane().setLayout(null);
+
+        // Header Label
+        JLabel titleLbl = new JLabel("Cafe Management System");
+        titleLbl.setFont(new Font("Tahoma", Font.BOLD, 48));
+        titleLbl.setBounds(350, 20, 700, 60);
+        getContentPane().add(titleLbl);
+
+        JLabel pageTitleLbl = new JLabel("Signup");
+        pageTitleLbl.setForeground(Color.RED);
+        pageTitleLbl.setFont(new Font("Tahoma", Font.BOLD, 36));
+        pageTitleLbl.setBounds(580, 100, 200, 40);
+        getContentPane().add(pageTitleLbl);
+
+        // Form Labels and Fields
+        int startX = 350;
+        int startY = 180;
+        int gapY = 40;
+
+        JLabel lblName = new JLabel("Name");
+        lblName.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblName.setBounds(startX, startY, 150, 30);
+        getContentPane().add(lblName);
+
+        nameTxt = new JTextField();
+        nameTxt.setBounds(startX + 180, startY, 350, 30);
+        getContentPane().add(nameTxt);
+
+        startY += gapY;
+        JLabel lblEmail = new JLabel("Email");
+        lblEmail.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblEmail.setBounds(startX, startY, 150, 30);
+        getContentPane().add(lblEmail);
+
+        emailTxt = new JTextField();
+        emailTxt.setBounds(startX + 180, startY, 350, 30);
+        getContentPane().add(emailTxt);
+
+        startY += gapY;
+        JLabel lblMobile = new JLabel("Mobile Number");
+        lblMobile.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblMobile.setBounds(startX, startY, 150, 30);
+        getContentPane().add(lblMobile);
+
+        mobileTxt = new JTextField();
+        mobileTxt.setBounds(startX + 180, startY, 350, 30);
+        getContentPane().add(mobileTxt);
+
+        startY += gapY;
+        JLabel lblAddress = new JLabel("Address");
+        lblAddress.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblAddress.setBounds(startX, startY, 150, 30);
+        getContentPane().add(lblAddress);
+
+        addressTxt = new JTextField();
+        addressTxt.setBounds(startX + 180, startY, 350, 30);
+        getContentPane().add(addressTxt);
+
+        startY += gapY;
+        JLabel lblPassword = new JLabel("Password");
+        lblPassword.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblPassword.setBounds(startX, startY, 150, 30);
+        getContentPane().add(lblPassword);
+
+        passwordTxt = new JPasswordField();
+        passwordTxt.setBounds(startX + 180, startY, 350, 30);
+        getContentPane().add(passwordTxt);
+
+        startY += gapY;
+        JLabel lblSq = new JLabel("Security Question");
+        lblSq.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblSq.setBounds(startX, startY, 150, 30);
+        getContentPane().add(lblSq);
+
+        sqTxt = new JTextField();
+        sqTxt.setBounds(startX + 180, startY, 350, 30);
+        getContentPane().add(sqTxt);
+
+        startY += gapY;
+        JLabel lblAnswer = new JLabel("Answer");
+        lblAnswer.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblAnswer.setBounds(startX, startY, 150, 30);
+        getContentPane().add(lblAnswer);
+
+        answerTxt = new JTextField();
+        answerTxt.setBounds(startX + 180, startY, 350, 30);
+        getContentPane().add(answerTxt);
+
+        // Buttons
+        startY += gapY + 10;
+        JButton btnSave = new JButton("Save");
+        btnSave.setIcon(new ImageIcon("src/images/save.png"));
+        btnSave.setBounds(startX + 180, startY, 100, 30);
+        btnSave.addActionListener(e -> saveAction());
+        getContentPane().add(btnSave);
+
+        JButton btnClear = new JButton("Clear");
+        btnClear.setIcon(new ImageIcon("src/images/clear.png"));
+        btnClear.setBounds(startX + 300, startY, 100, 30);
+        btnClear.addActionListener(e -> clearAction());
+        getContentPane().add(btnClear);
+
+        JButton btnExit = new JButton("Exit");
+        btnExit.setIcon(new ImageIcon("src/images/exit small.png"));
+        btnExit.setBounds(startX + 430, startY, 100, 30);
+        btnExit.addActionListener(e -> System.exit(0));
+        getContentPane().add(btnExit);
+
+        startY += 40;
+        JButton btnForgot = new JButton("Forgot Password ?");
+        btnForgot.setBounds(startX + 180, startY, 180, 30);
+        btnForgot.addActionListener(e -> {
+            setVisible(false);
+            new ForgotPasswordPage().setVisible(true);
+        });
+        getContentPane().add(btnForgot);
+
+        JButton btnLogin = new JButton("Login");
+        btnLogin.setBounds(startX + 430, startY, 100, 30);
+        btnLogin.addActionListener(e -> {
+            setVisible(false);
+            new LoginPage().setVisible(true);
+        });
+        getContentPane().add(btnLogin);
+
+        // Background Image
+        JLabel background = new JLabel(new ImageIcon("src/images/first page background.PNG"));
+        background.setBounds(0, 0, 1366, 768);
+        getContentPane().add(background);
+    }
+
+    private void saveAction() {
+        String name = nameTxt.getText();
+        String email = emailTxt.getText();
+        String mobile = mobileTxt.getText();
+        String address = addressTxt.getText();
+        String password = new String(passwordTxt.getPassword());
+        String sq = sqTxt.getText();
+        String answer = answerTxt.getText();
+
+        if (name.isEmpty() || email.isEmpty() || mobile.isEmpty() || address.isEmpty() || password.isEmpty() || sq.isEmpty() || answer.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please fill all fields!");
+            return;
+        }
+
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setMobileNumber(mobile);
+        user.setAddress(address);
+        user.setPassword(password);
+        user.setSecurityQuestion(sq);
+        user.setAnswer(answer);
+
+        Connection con = null;
+        try {
+            con = dbUtil.getCon();
+            userDao.save(con, user);
+            JOptionPane.showMessageDialog(null, "Registered Successfully! Wait for Admin Approval.");
+            clearAction();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Registration Failed or Email already exists.");
+        } finally {
+            try {
+                dbUtil.closeCon(con);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void clearAction() {
+        nameTxt.setText("");
+        emailTxt.setText("");
+        mobileTxt.setText("");
+        addressTxt.setText("");
+        passwordTxt.setText("");
+        sqTxt.setText("");
+        answerTxt.setText("");
+    }
+
+    public static void main(String[] args) {
+        new SignupPage().setVisible(true);
+    }
+}

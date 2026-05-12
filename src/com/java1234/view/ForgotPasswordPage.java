@@ -1,0 +1,197 @@
+package com.java1234.view;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import com.java1234.dao.UserDao;
+import com.java1234.model.User;
+import com.java1234.util.DbUtil;
+
+public class ForgotPasswordPage extends JFrame {
+
+    private JTextField emailTxt;
+    private JTextField sqTxt;
+    private JTextField answerTxt;
+    private JPasswordField newPasswordTxt;
+    private String dbAnswer = null;
+    
+    private DbUtil dbUtil = new DbUtil();
+    private UserDao userDao = new UserDao();
+
+    public ForgotPasswordPage() {
+        setTitle("Forgot Password");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Full screen
+        getContentPane().setLayout(null);
+
+        // Header Label
+        JLabel titleLbl = new JLabel("Cafe Management System");
+        titleLbl.setFont(new Font("Tahoma", Font.BOLD, 48));
+        titleLbl.setBounds(350, 20, 700, 60);
+        getContentPane().add(titleLbl);
+
+        JLabel pageTitleLbl = new JLabel("Forgot Password ?");
+        pageTitleLbl.setForeground(Color.RED);
+        pageTitleLbl.setFont(new Font("Tahoma", Font.BOLD, 36));
+        pageTitleLbl.setBounds(500, 120, 400, 40);
+        getContentPane().add(pageTitleLbl);
+
+        int startX = 300;
+        int startY = 220;
+        int gapY = 40;
+
+        JLabel lblEmail = new JLabel("Email");
+        lblEmail.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblEmail.setBounds(startX, startY, 200, 30);
+        getContentPane().add(lblEmail);
+
+        emailTxt = new JTextField();
+        emailTxt.setBounds(startX + 220, startY, 350, 30);
+        getContentPane().add(emailTxt);
+        
+        JButton btnSearch = new JButton("Search");
+        btnSearch.setIcon(new ImageIcon("src/images/search.png"));
+        btnSearch.setBounds(startX + 590, startY, 100, 30);
+        btnSearch.addActionListener(e -> searchAction());
+        getContentPane().add(btnSearch);
+
+        startY += gapY;
+        JLabel lblSq = new JLabel("Your Security Question");
+        lblSq.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblSq.setBounds(startX, startY, 200, 30);
+        getContentPane().add(lblSq);
+
+        sqTxt = new JTextField();
+        sqTxt.setBounds(startX + 220, startY, 350, 30);
+        sqTxt.setEditable(false);
+        getContentPane().add(sqTxt);
+
+        startY += gapY;
+        JLabel lblAnswer = new JLabel("Your Answer");
+        lblAnswer.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblAnswer.setBounds(startX, startY, 200, 30);
+        getContentPane().add(lblAnswer);
+
+        answerTxt = new JTextField();
+        answerTxt.setBounds(startX + 220, startY, 350, 30);
+        getContentPane().add(answerTxt);
+
+        startY += gapY;
+        JLabel lblNewPassword = new JLabel("Enter New Password");
+        lblNewPassword.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblNewPassword.setBounds(startX, startY, 200, 30);
+        getContentPane().add(lblNewPassword);
+
+        newPasswordTxt = new JPasswordField();
+        newPasswordTxt.setBounds(startX + 220, startY, 350, 30);
+        getContentPane().add(newPasswordTxt);
+
+        // Buttons
+        startY += gapY + 20;
+        JButton btnUpdate = new JButton("Update");
+        btnUpdate.setIcon(new ImageIcon("src/images/save.png"));
+        btnUpdate.setBounds(startX + 220, startY, 100, 30);
+        btnUpdate.addActionListener(e -> updateAction());
+        getContentPane().add(btnUpdate);
+
+        JButton btnClear = new JButton("Clear");
+        btnClear.setIcon(new ImageIcon("src/images/clear.png"));
+        btnClear.setBounds(startX + 340, startY, 100, 30);
+        btnClear.addActionListener(e -> clearAction());
+        getContentPane().add(btnClear);
+
+        JButton btnExit = new JButton("Exit");
+        btnExit.setIcon(new ImageIcon("src/images/exit small.png"));
+        btnExit.setBounds(startX + 470, startY, 100, 30);
+        btnExit.addActionListener(e -> System.exit(0));
+        getContentPane().add(btnExit);
+
+        startY += 40;
+        JButton btnSignup = new JButton("Signup");
+        btnSignup.setBounds(startX + 220, startY, 100, 30);
+        btnSignup.addActionListener(e -> {
+            setVisible(false);
+            new SignupPage().setVisible(true);
+        });
+        getContentPane().add(btnSignup);
+
+        JButton btnLogin = new JButton("Login");
+        btnLogin.setBounds(startX + 470, startY, 100, 30);
+        btnLogin.addActionListener(e -> {
+            setVisible(false);
+            new LoginPage().setVisible(true);
+        });
+        getContentPane().add(btnLogin);
+
+        // Background Image
+        JLabel background = new JLabel(new ImageIcon("src/images/first page background.PNG"));
+        background.setBounds(0, 0, 1366, 768);
+        getContentPane().add(background);
+    }
+
+    private void searchAction() {
+        String email = emailTxt.getText();
+        if(email.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter email!");
+            return;
+        }
+
+        Connection con = null;
+        try {
+            con = dbUtil.getCon();
+            User user = userDao.getSecurityQuestion(con, email);
+            if(user != null) {
+                sqTxt.setText(user.getSecurityQuestion());
+                dbAnswer = user.getAnswer();
+            } else {
+                JOptionPane.showMessageDialog(null, "Email not found!");
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try { dbUtil.closeCon(con); } catch(Exception e) {}
+        }
+    }
+
+    private void updateAction() {
+        String email = emailTxt.getText();
+        String answer = answerTxt.getText();
+        String newPassword = new String(newPasswordTxt.getPassword());
+
+        if (email.isEmpty() || answer.isEmpty() || newPassword.isEmpty() || sqTxt.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "All fields are required!");
+            return;
+        }
+
+        if(!answer.equals(dbAnswer)) {
+            JOptionPane.showMessageDialog(null, "Incorrect Answer!");
+            return;
+        }
+
+        Connection con = null;
+        try {
+            con = dbUtil.getCon();
+            userDao.updatePassword(con, email, newPassword);
+            JOptionPane.showMessageDialog(null, "Password Updated Successfully!");
+            clearAction();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try { dbUtil.closeCon(con); } catch(Exception e) {}
+        }
+    }
+
+    private void clearAction() {
+        emailTxt.setText("");
+        sqTxt.setText("");
+        answerTxt.setText("");
+        newPasswordTxt.setText("");
+        dbAnswer = null;
+    }
+
+    public static void main(String[] args) {
+        new ForgotPasswordPage().setVisible(true);
+    }
+}

@@ -1,6 +1,6 @@
-# Book Management System - Setup & Installation Guide
+# Cafe Management System - Setup & Installation Guide
 
-Welcome to the Book Management System! This guide will walk you through setting up the project on a new computer. It covers Java installation, MySQL database setup, and compiling/running the application.
+Welcome to the Cafe Management System! This guide will walk you through setting up the project on a new computer. It covers Java installation, MySQL database setup, and compiling/running the application.
 
 ## 1. Prerequisites
 
@@ -17,57 +17,21 @@ Before starting, ensure you have the following installed on your new computer:
 
 ## 2. Database Installation & Configuration
 
-The application requires a MySQL database named `db_book` to store users, books, and book categories.
+The application requires a MySQL database named `cafe_ms` to store users, categories, products, and bills.
 
-### Step 2.1: Create the Database
-Open your MySQL client (like MySQL Workbench, DBeaver, or terminal) and execute the following commands:
+### Step 2.1: Run the Database Script
+We have provided a `database.sql` script in the root directory of this project.
 
-```sql
-CREATE DATABASE IF NOT EXISTS db_book DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE db_book;
-```
+1. Open your MySQL client (like MySQL Workbench, DBeaver, or terminal).
+2. Copy the contents of `database.sql` and execute them. This will:
+   - Create the `cafe_ms` database.
+   - Create the `user`, `category`, `product`, and `bill` tables.
+   - Insert the default admin user.
 
-### Step 2.2: Create the Tables
-Copy and paste the following DDL script to create the necessary tables:
-
-```sql
--- 1. Create Book Types Table
-CREATE TABLE `t_booktype` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `bookTypeName` varchar(20) DEFAULT NULL,
-  `bookTypeDesc` varchar(1000) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- 2. Create Books Table
-CREATE TABLE `t_book` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `bookName` varchar(20) DEFAULT NULL,
-  `author` varchar(20) DEFAULT NULL,
-  `sex` varchar(10) DEFAULT NULL,
-  `price` float DEFAULT NULL,
-  `bookDesc` varchar(1000) DEFAULT NULL,
-  `bookTypeId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_t_book` (`bookTypeId`),
-  CONSTRAINT `FK_t_book` FOREIGN KEY (`bookTypeId`) REFERENCES `t_booktype` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- 3. Create Users Table
-CREATE TABLE `t_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userName` varchar(20) DEFAULT NULL,
-  `password` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-```
-
-### Step 2.3: Insert Default Admin User
-To be able to log into the application, insert an initial admin account:
-
-```sql
-INSERT INTO `t_user` (`userName`, `password`) VALUES ('admin', 'admin');
-```
+### Step 2.2: Verify Default Admin User
+The script automatically inserts the following admin account:
+- Email: **admin@gmail.com**
+- Password: **admin**
 
 ---
 
@@ -82,7 +46,7 @@ Update the `dbUserName` and `dbPassword` variables to match your local MySQL cre
 
 ```java
 public class DbUtil {
-    private String dbUrl = "jdbc:mysql://localhost:3306/db_book?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC";
+    private String dbUrl = "jdbc:mysql://localhost:3306/cafe_ms?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC";
     
     // UPDATE THESE TO MATCH YOUR MYSQL SETUP:
     private String dbUserName = "root"; 
@@ -107,13 +71,13 @@ Open your terminal (or Command Prompt on Windows), navigate to the root director
 **For macOS / Linux:**
 ```bash
 mkdir -p bin
-javac -cp "lib/mysql-connector-java-8.0.30.jar" -d bin $(find src -name "*.java")
+javac -cp "lib/mysql-connector-java-8.0.30.jar:lib/itextpdf-5.5.13.3.jar" -d bin $(find src -name "*.java")
 ```
 
 **For Windows (PowerShell):**
 ```powershell
 mkdir bin
-Get-ChildItem -Path src -Filter *.java -Recurse | ForEach-Object { javac -cp "lib/mysql-connector-java-8.0.30.jar" -d bin $_.FullName }
+Get-ChildItem -Path src -Filter *.java -Recurse | ForEach-Object { javac -cp "lib/mysql-connector-java-8.0.30.jar;lib/itextpdf-5.5.13.3.jar" -d bin $_.FullName }
 ```
 
 ---
@@ -124,13 +88,13 @@ Once compiled, you can launch the application by running the `LogOnFrm` main cla
 
 **For macOS / Linux:**
 ```bash
-java -cp "bin:lib/mysql-connector-java-8.0.30.jar" com.java1234.view.LogOnFrm
+java -cp "bin:lib/mysql-connector-java-8.0.30.jar:lib/itextpdf-5.5.13.3.jar" com.java1234.view.LoginPage
 ```
 
 **For Windows:**
 ```powershell
-java -cp "bin;lib/mysql-connector-java-8.0.30.jar" com.java1234.view.LogOnFrm
+java -cp "bin;lib/mysql-connector-java-8.0.30.jar;lib/itextpdf-5.5.13.3.jar" com.java1234.view.LoginPage
 ```
 
 ### Success!
-The "Library Management System" login screen should now appear. You can log in using the credentials you created earlier (Username: **admin**, Password: **admin**).
+The "Cafe Management System" login screen should now appear. You can log in using the credentials you created earlier (Email: **admin@gmail.com**, Password: **admin**).

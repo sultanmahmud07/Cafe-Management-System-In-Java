@@ -1,5 +1,7 @@
+import com.java1234.view.LoginPage;
+
 public class App {
     public static void main(String[] args) throws Exception {
-        System.out.println("Welcome to Book Management Application!");
+        new LoginPage().setVisible(true);
     }
 }
