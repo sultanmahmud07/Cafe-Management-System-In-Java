@@ -6,7 +6,8 @@ public class Product {
     private String category;
     private String price;
 
-    public Product() {}
+    public Product() {
+    }
 
     public int getId() {
         return id;

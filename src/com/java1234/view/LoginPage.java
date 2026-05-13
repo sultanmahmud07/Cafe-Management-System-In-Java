@@ -20,21 +20,22 @@ public class LoginPage extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Full screen
         getContentPane().setLayout(null);
+        
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenW = screenSize.width;
+        int screenH = screenSize.height;
 
-        // Header Label
-        JLabel titleLbl = new JLabel("Cafe Management System");
-        titleLbl.setFont(new Font("Tahoma", Font.BOLD, 48));
-        titleLbl.setBounds(350, 20, 700, 60);
-        getContentPane().add(titleLbl);
+        // Header removed as it is already in the background image
 
         JLabel pageTitleLbl = new JLabel("Login");
         pageTitleLbl.setForeground(Color.RED);
         pageTitleLbl.setFont(new Font("Tahoma", Font.BOLD, 36));
-        pageTitleLbl.setBounds(600, 150, 200, 40);
+        pageTitleLbl.setBounds(0, 240, screenW, 40);
+        pageTitleLbl.setHorizontalAlignment(SwingConstants.CENTER);
         getContentPane().add(pageTitleLbl);
 
-        int startX = 350;
-        int startY = 250;
+        int startX = (screenW - 530) / 2;
+        int startY = 290;
         int gapY = 40;
 
         JLabel lblEmail = new JLabel("Email");
@@ -94,8 +95,11 @@ public class LoginPage extends JFrame {
         getContentPane().add(btnSignup);
 
         // Background Image
-        JLabel background = new JLabel(new ImageIcon("src/images/first page background.PNG"));
-        background.setBounds(0, 0, 1366, 768);
+        ImageIcon icon = new ImageIcon("src/images/first page background.PNG");
+        Image img = icon.getImage();
+        Image newImg = img.getScaledInstance(screenW, screenH, java.awt.Image.SCALE_SMOOTH);
+        JLabel background = new JLabel(new ImageIcon(newImg));
+        background.setBounds(0, 0, screenW, screenH);
         getContentPane().add(background);
     }
 

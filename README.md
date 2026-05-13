@@ -20,13 +20,63 @@ Before starting, ensure you have the following installed on your new computer:
 The application requires a MySQL database named `cafe_ms` to store users, categories, products, and bills.
 
 ### Step 2.1: Run the Database Script
-We have provided a `database.sql` script in the root directory of this project.
 
-1. Open your MySQL client (like MySQL Workbench, DBeaver, or terminal).
-2. Copy the contents of `database.sql` and execute them. This will:
-   - Create the `cafe_ms` database.
-   - Create the `user`, `category`, `product`, and `bill` tables.
-   - Insert the default admin user.
+Open your MySQL client (MySQL Workbench, DBeaver, or terminal) and run the following SQL:
+
+```sql
+CREATE DATABASE IF NOT EXISTS cafe_ms DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE cafe_ms;
+
+-- User Table
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(250) DEFAULT NULL,
+  `email` varchar(250) DEFAULT NULL,
+  `mobileNumber` varchar(20) DEFAULT NULL,
+  `address` varchar(500) DEFAULT NULL,
+  `password` varchar(250) DEFAULT NULL,
+  `securityQuestion` varchar(500) DEFAULT NULL,
+  `answer` varchar(500) DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Insert default admin (status is 'true' by default)
+INSERT INTO `user` (`name`, `email`, `mobileNumber`, `address`, `password`, `securityQuestion`, `answer`, `status`) 
+VALUES ('Admin', 'admin@gmail.com', '1234567890', 'Admin Address', 'admin', 'What is your favorite color?', 'Black', 'true');
+
+-- Category Table
+CREATE TABLE `category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Product Table
+CREATE TABLE `product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `price` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Bill Table
+CREATE TABLE `bill` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(200) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `mobileNumber` varchar(20) DEFAULT NULL,
+  `date` varchar(50) DEFAULT NULL,
+  `total` varchar(255) DEFAULT NULL,
+  `createdBy` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+> **Note:** You can also find this script saved as `database.sql` in the root directory of this project.
 
 ### Step 2.2: Verify Default Admin User
 The script automatically inserts the following admin account:
