@@ -18,7 +18,7 @@ public class ViewEditDeleteProductPage extends JFrame {
 
     private JTable productTable;
     private DefaultTableModel tableModel;
-    private JTextField idTxt;
+    private JLabel idValLbl;
     private JTextField nameTxt;
     private JComboBox<String> categoryCombo;
     private JTextField priceTxt;
@@ -29,101 +29,125 @@ public class ViewEditDeleteProductPage extends JFrame {
 
     public ViewEditDeleteProductPage() {
         setTitle("View, Edit & Delete Product");
-        setSize(800, 500);
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        getContentPane().setLayout(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Full screen
+
+        // Create responsive background panel
+        JPanel bgPanel = new JPanel() {
+            Image bgImage = new ImageIcon("src/images/full-page-background.PNG").getImage();
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (bgImage != null) {
+                    g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+        bgPanel.setLayout(new GridBagLayout());
+        setContentPane(bgPanel);
+
+        // Form Panel (Centered)
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(null);
+        formPanel.setPreferredSize(new Dimension(1000, 600));
+        formPanel.setOpaque(false);
 
         JLabel titleLbl = new JLabel("View, Edit & Delete Product");
         titleLbl.setFont(new Font("Tahoma", Font.BOLD, 24));
+        titleLbl.setForeground(Color.WHITE);
         titleLbl.setBounds(20, 20, 400, 30);
         titleLbl.setIcon(new ImageIcon("src/images/view edit delete product.png"));
-        getContentPane().add(titleLbl);
+        formPanel.add(titleLbl);
 
         JButton btnClose = new JButton("");
         btnClose.setIcon(new ImageIcon("src/images/close.png"));
-        btnClose.setBounds(730, 20, 30, 30);
+        btnClose.setBounds(950, 20, 30, 30);
         btnClose.addActionListener(e -> setVisible(false));
-        getContentPane().add(btnClose);
+        formPanel.add(btnClose);
 
-        // Edit Form
+        // Edit Form (Left Side)
         int startX = 20;
-        int startY = 100;
-        int gapY = 40;
+        int startY = 150;
+        int gapY = 50;
 
-        JLabel lblId = new JLabel("ID");
+        JLabel lblId = new JLabel("ID:");
         lblId.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblId.setForeground(Color.WHITE);
         lblId.setBounds(startX, startY, 80, 20);
-        getContentPane().add(lblId);
+        formPanel.add(lblId);
 
-        idTxt = new JTextField();
-        idTxt.setBounds(startX + 80, startY, 200, 30);
-        idTxt.setEditable(false);
-        getContentPane().add(idTxt);
+        idValLbl = new JLabel("00");
+        idValLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
+        idValLbl.setForeground(Color.WHITE);
+        idValLbl.setBounds(startX + 80, startY, 200, 30);
+        formPanel.add(idValLbl);
 
         startY += gapY;
         JLabel lblName = new JLabel("Name");
         lblName.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblName.setForeground(Color.WHITE);
         lblName.setBounds(startX, startY, 80, 20);
-        getContentPane().add(lblName);
+        formPanel.add(lblName);
 
         nameTxt = new JTextField();
-        nameTxt.setBounds(startX + 80, startY, 200, 30);
-        getContentPane().add(nameTxt);
+        nameTxt.setBounds(startX + 80, startY, 250, 30);
+        formPanel.add(nameTxt);
 
         startY += gapY;
         JLabel lblCategory = new JLabel("Category");
         lblCategory.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblCategory.setForeground(Color.WHITE);
         lblCategory.setBounds(startX, startY, 80, 20);
-        getContentPane().add(lblCategory);
+        formPanel.add(lblCategory);
 
         categoryCombo = new JComboBox<>();
-        categoryCombo.setBounds(startX + 80, startY, 200, 30);
-        getContentPane().add(categoryCombo);
+        categoryCombo.setBounds(startX + 80, startY, 250, 30);
+        formPanel.add(categoryCombo);
 
         startY += gapY;
         JLabel lblPrice = new JLabel("Price");
         lblPrice.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblPrice.setForeground(Color.WHITE);
         lblPrice.setBounds(startX, startY, 80, 20);
-        getContentPane().add(lblPrice);
+        formPanel.add(lblPrice);
 
         priceTxt = new JTextField();
-        priceTxt.setBounds(startX + 80, startY, 200, 30);
-        getContentPane().add(priceTxt);
+        priceTxt.setBounds(startX + 80, startY, 250, 30);
+        formPanel.add(priceTxt);
 
         // Buttons
         startY += gapY + 10;
         JButton btnUpdate = new JButton("Update");
         btnUpdate.setIcon(new ImageIcon("src/images/save.png"));
-        btnUpdate.setBounds(startX, startY, 90, 30);
+        btnUpdate.setBounds(startX + 20, startY, 100, 30);
         btnUpdate.addActionListener(e -> updateAction());
-        getContentPane().add(btnUpdate);
+        formPanel.add(btnUpdate);
 
         JButton btnDelete = new JButton("Delete");
         btnDelete.setIcon(new ImageIcon("src/images/delete.png"));
-        btnDelete.setBounds(startX + 100, startY, 90, 30);
+        btnDelete.setBounds(startX + 130, startY, 100, 30);
         btnDelete.addActionListener(e -> deleteAction());
-        getContentPane().add(btnDelete);
+        formPanel.add(btnDelete);
 
         JButton btnClear = new JButton("Clear");
         btnClear.setIcon(new ImageIcon("src/images/clear.png"));
-        btnClear.setBounds(startX + 200, startY, 80, 30);
+        btnClear.setBounds(startX + 240, startY, 90, 30);
         btnClear.addActionListener(e -> clearAction());
-        getContentPane().add(btnClear);
+        formPanel.add(btnClear);
 
-        // Table
+        // Table (Right Side)
         tableModel = new DefaultTableModel(new Object[]{"ID", "Name", "Category", "Price"}, 0);
         productTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(productTable);
-        scrollPane.setBounds(330, 100, 430, 300);
-        getContentPane().add(scrollPane);
+        scrollPane.setBounds(400, 150, 580, 400);
+        formPanel.add(scrollPane);
 
         productTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = productTable.getSelectedRow();
                 if (row != -1) {
-                    idTxt.setText(tableModel.getValueAt(row, 0).toString());
+                    idValLbl.setText(tableModel.getValueAt(row, 0).toString());
                     nameTxt.setText(tableModel.getValueAt(row, 1).toString());
                     categoryCombo.setSelectedItem(tableModel.getValueAt(row, 2).toString());
                     priceTxt.setText(tableModel.getValueAt(row, 3).toString());
@@ -131,10 +155,7 @@ public class ViewEditDeleteProductPage extends JFrame {
             }
         });
 
-        // Background Image
-        JLabel background = new JLabel(new ImageIcon("src/images/small-page-background.png"));
-        background.setBounds(0, 0, 800, 500);
-        getContentPane().add(background);
+        bgPanel.add(formPanel);
 
         loadCategory();
         loadTableData();
@@ -172,12 +193,12 @@ public class ViewEditDeleteProductPage extends JFrame {
     }
 
     private void updateAction() {
-        if(idTxt.getText().isEmpty()) {
+        if(idValLbl.getText().equals("00")) {
             JOptionPane.showMessageDialog(null, "Select a product to update!");
             return;
         }
         Product product = new Product();
-        product.setId(Integer.parseInt(idTxt.getText()));
+        product.setId(Integer.parseInt(idValLbl.getText()));
         product.setName(nameTxt.getText());
         product.setCategory((String)categoryCombo.getSelectedItem());
         product.setPrice(priceTxt.getText());
@@ -197,7 +218,7 @@ public class ViewEditDeleteProductPage extends JFrame {
     }
 
     private void deleteAction() {
-        if(idTxt.getText().isEmpty()) {
+        if(idValLbl.getText().equals("00")) {
             JOptionPane.showMessageDialog(null, "Select a product to delete!");
             return;
         }
@@ -206,7 +227,7 @@ public class ViewEditDeleteProductPage extends JFrame {
             Connection con = null;
             try {
                 con = dbUtil.getCon();
-                productDao.delete(con, idTxt.getText());
+                productDao.delete(con, idValLbl.getText());
                 JOptionPane.showMessageDialog(null, "Product Deleted Successfully!");
                 clearAction();
                 loadTableData();
@@ -219,7 +240,7 @@ public class ViewEditDeleteProductPage extends JFrame {
     }
 
     private void clearAction() {
-        idTxt.setText("");
+        idValLbl.setText("00");
         nameTxt.setText("");
         priceTxt.setText("");
     }

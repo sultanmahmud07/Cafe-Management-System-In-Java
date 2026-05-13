@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 public class DbUtil {
     private String dbUrl = "jdbc:mysql://localhost:3306/cafe_ms?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC";
     private String dbUserName = "root";
-    private String dbPassword = "MdShimul@Molla007"; // database root password
+    private String dbPassword = "MdShimul@Molla007";
     private String jdbcName = "com.mysql.cj.jdbc.Driver";
 
     /**

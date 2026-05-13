@@ -2,8 +2,6 @@ package com.java1234.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import com.java1234.dao.UserDao;
 import com.java1234.model.User;
@@ -13,7 +11,7 @@ public class LoginPage extends JFrame {
 
     private JTextField emailTxt;
     private JPasswordField passwordTxt;
-    
+
     private DbUtil dbUtil = new DbUtil();
     private UserDao userDao = new UserDao();
 

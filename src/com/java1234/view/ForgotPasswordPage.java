@@ -2,8 +2,6 @@ package com.java1234.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import com.java1234.dao.UserDao;
 import com.java1234.model.User;
@@ -15,7 +13,6 @@ public class ForgotPasswordPage extends JFrame {
     private JTextField sqTxt;
     private JTextField answerTxt;
     private JPasswordField newPasswordTxt;
-    private String dbAnswer = null;
     
     private DbUtil dbUtil = new DbUtil();
     private UserDao userDao = new UserDao();
@@ -24,117 +21,134 @@ public class ForgotPasswordPage extends JFrame {
         setTitle("Forgot Password");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Full screen
-        getContentPane().setLayout(null);
 
-        // Header Label
+        // Create responsive background panel
+        JPanel bgPanel = new JPanel() {
+            Image bgImage = new ImageIcon("src/images/first page background.PNG").getImage();
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (bgImage != null) {
+                    g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+        bgPanel.setLayout(new GridBagLayout());
+        setContentPane(bgPanel);
+
+        // Form Panel (Centered)
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(null);
+        formPanel.setPreferredSize(new Dimension(800, 600));
+        formPanel.setOpaque(false);
+
         JLabel titleLbl = new JLabel("Cafe Management System");
         titleLbl.setFont(new Font("Tahoma", Font.BOLD, 48));
-        titleLbl.setBounds(350, 20, 700, 60);
-        getContentPane().add(titleLbl);
+        titleLbl.setBounds(50, 20, 700, 60);
+        titleLbl.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(titleLbl);
 
-        JLabel pageTitleLbl = new JLabel("Forgot Password ?");
+        JLabel pageTitleLbl = new JLabel("Forgot Password?");
         pageTitleLbl.setForeground(Color.RED);
         pageTitleLbl.setFont(new Font("Tahoma", Font.BOLD, 36));
-        pageTitleLbl.setBounds(500, 120, 400, 40);
-        getContentPane().add(pageTitleLbl);
+        pageTitleLbl.setBounds(50, 100, 700, 40);
+        pageTitleLbl.setHorizontalAlignment(SwingConstants.CENTER);
+        formPanel.add(pageTitleLbl);
 
-        int startX = 300;
-        int startY = 220;
-        int gapY = 40;
+        int startX = 150;
+        int startY = 180;
+        int gapY = 50;
 
         JLabel lblEmail = new JLabel("Email");
         lblEmail.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblEmail.setBounds(startX, startY, 200, 30);
-        getContentPane().add(lblEmail);
+        lblEmail.setBounds(startX, startY, 150, 30);
+        formPanel.add(lblEmail);
 
         emailTxt = new JTextField();
-        emailTxt.setBounds(startX + 220, startY, 350, 30);
-        getContentPane().add(emailTxt);
-        
+        emailTxt.setBounds(startX + 180, startY, 250, 30);
+        formPanel.add(emailTxt);
+
         JButton btnSearch = new JButton("Search");
         btnSearch.setIcon(new ImageIcon("src/images/search.png"));
-        btnSearch.setBounds(startX + 590, startY, 100, 30);
+        btnSearch.setBounds(startX + 450, startY, 100, 30);
         btnSearch.addActionListener(e -> searchAction());
-        getContentPane().add(btnSearch);
+        formPanel.add(btnSearch);
 
         startY += gapY;
-        JLabel lblSq = new JLabel("Your Security Question");
+        JLabel lblSq = new JLabel("Security Question");
         lblSq.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblSq.setBounds(startX, startY, 200, 30);
-        getContentPane().add(lblSq);
+        lblSq.setBounds(startX, startY, 150, 30);
+        formPanel.add(lblSq);
 
         sqTxt = new JTextField();
-        sqTxt.setBounds(startX + 220, startY, 350, 30);
+        sqTxt.setBounds(startX + 180, startY, 370, 30);
         sqTxt.setEditable(false);
-        getContentPane().add(sqTxt);
+        formPanel.add(sqTxt);
 
         startY += gapY;
-        JLabel lblAnswer = new JLabel("Your Answer");
+        JLabel lblAnswer = new JLabel("Answer");
         lblAnswer.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblAnswer.setBounds(startX, startY, 200, 30);
-        getContentPane().add(lblAnswer);
+        lblAnswer.setBounds(startX, startY, 150, 30);
+        formPanel.add(lblAnswer);
 
         answerTxt = new JTextField();
-        answerTxt.setBounds(startX + 220, startY, 350, 30);
-        getContentPane().add(answerTxt);
+        answerTxt.setBounds(startX + 180, startY, 370, 30);
+        formPanel.add(answerTxt);
 
         startY += gapY;
-        JLabel lblNewPassword = new JLabel("Enter New Password");
-        lblNewPassword.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblNewPassword.setBounds(startX, startY, 200, 30);
-        getContentPane().add(lblNewPassword);
+        JLabel lblNewPwd = new JLabel("New Password");
+        lblNewPwd.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblNewPwd.setBounds(startX, startY, 150, 30);
+        formPanel.add(lblNewPwd);
 
         newPasswordTxt = new JPasswordField();
-        newPasswordTxt.setBounds(startX + 220, startY, 350, 30);
-        getContentPane().add(newPasswordTxt);
+        newPasswordTxt.setBounds(startX + 180, startY, 370, 30);
+        formPanel.add(newPasswordTxt);
 
         // Buttons
         startY += gapY + 20;
         JButton btnUpdate = new JButton("Update");
         btnUpdate.setIcon(new ImageIcon("src/images/save.png"));
-        btnUpdate.setBounds(startX + 220, startY, 100, 30);
+        btnUpdate.setBounds(startX + 180, startY, 100, 30);
         btnUpdate.addActionListener(e -> updateAction());
-        getContentPane().add(btnUpdate);
+        formPanel.add(btnUpdate);
 
         JButton btnClear = new JButton("Clear");
         btnClear.setIcon(new ImageIcon("src/images/clear.png"));
-        btnClear.setBounds(startX + 340, startY, 100, 30);
+        btnClear.setBounds(startX + 300, startY, 100, 30);
         btnClear.addActionListener(e -> clearAction());
-        getContentPane().add(btnClear);
+        formPanel.add(btnClear);
 
         JButton btnExit = new JButton("Exit");
         btnExit.setIcon(new ImageIcon("src/images/exit small.png"));
-        btnExit.setBounds(startX + 470, startY, 100, 30);
+        btnExit.setBounds(startX + 420, startY, 100, 30);
         btnExit.addActionListener(e -> System.exit(0));
-        getContentPane().add(btnExit);
+        formPanel.add(btnExit);
 
-        startY += 40;
+        startY += 50;
         JButton btnSignup = new JButton("Signup");
-        btnSignup.setBounds(startX + 220, startY, 100, 30);
+        btnSignup.setBounds(startX + 180, startY, 100, 30);
         btnSignup.addActionListener(e -> {
             setVisible(false);
             new SignupPage().setVisible(true);
         });
-        getContentPane().add(btnSignup);
+        formPanel.add(btnSignup);
 
         JButton btnLogin = new JButton("Login");
-        btnLogin.setBounds(startX + 470, startY, 100, 30);
+        btnLogin.setBounds(startX + 420, startY, 100, 30);
         btnLogin.addActionListener(e -> {
             setVisible(false);
             new LoginPage().setVisible(true);
         });
-        getContentPane().add(btnLogin);
+        formPanel.add(btnLogin);
 
-        // Background Image
-        JLabel background = new JLabel(new ImageIcon("src/images/first page background.PNG"));
-        background.setBounds(0, 0, 1366, 768);
-        getContentPane().add(background);
+        bgPanel.add(formPanel);
     }
 
     private void searchAction() {
         String email = emailTxt.getText();
-        if(email.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter email!");
+        if (email.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Email field is required");
             return;
         }
 
@@ -142,16 +156,15 @@ public class ForgotPasswordPage extends JFrame {
         try {
             con = dbUtil.getCon();
             User user = userDao.getSecurityQuestion(con, email);
-            if(user != null) {
+            if (user != null) {
                 sqTxt.setText(user.getSecurityQuestion());
-                dbAnswer = user.getAnswer();
             } else {
-                JOptionPane.showMessageDialog(null, "Email not found!");
+                JOptionPane.showMessageDialog(null, "Incorrect Email");
             }
-        } catch(Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            try { dbUtil.closeCon(con); } catch(Exception e) {}
+            try { dbUtil.closeCon(con); } catch(Exception e){}
         }
     }
 
@@ -160,26 +173,27 @@ public class ForgotPasswordPage extends JFrame {
         String answer = answerTxt.getText();
         String newPassword = new String(newPasswordTxt.getPassword());
 
-        if (email.isEmpty() || answer.isEmpty() || newPassword.isEmpty() || sqTxt.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "All fields are required!");
-            return;
-        }
-
-        if(!answer.equals(dbAnswer)) {
-            JOptionPane.showMessageDialog(null, "Incorrect Answer!");
+        if (email.isEmpty() || answer.isEmpty() || newPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "All fields are required");
             return;
         }
 
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            userDao.updatePassword(con, email, newPassword);
-            JOptionPane.showMessageDialog(null, "Password Updated Successfully!");
-            clearAction();
-        } catch(Exception ex) {
-            ex.printStackTrace();
+            User user = userDao.getSecurityQuestion(con, email);
+            if (user != null && user.getAnswer().equals(answer)) {
+                userDao.updatePassword(con, email, newPassword);
+                JOptionPane.showMessageDialog(null, "Password Updated Successfully");
+                setVisible(false);
+                new LoginPage().setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Incorrect Answer");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
-            try { dbUtil.closeCon(con); } catch(Exception e) {}
+            try { dbUtil.closeCon(con); } catch(Exception e){}
         }
     }
 
@@ -188,10 +202,5 @@ public class ForgotPasswordPage extends JFrame {
         sqTxt.setText("");
         answerTxt.setText("");
         newPasswordTxt.setText("");
-        dbAnswer = null;
-    }
-
-    public static void main(String[] args) {
-        new ForgotPasswordPage().setVisible(true);
     }
 }

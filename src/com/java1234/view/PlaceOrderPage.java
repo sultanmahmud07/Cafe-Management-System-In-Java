@@ -63,67 +63,93 @@ public class PlaceOrderPage extends JFrame {
         setTitle("Place Order");
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Full screen
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        getContentPane().setLayout(null);
+
+        // Create responsive background panel
+        JPanel bgPanel = new JPanel() {
+            Image bgImage = new ImageIcon("src/images/full-page-background.PNG").getImage();
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (bgImage != null) {
+                    g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+        bgPanel.setLayout(new GridBagLayout());
+        setContentPane(bgPanel);
+
+        // Form Panel (Centered)
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(null);
+        formPanel.setPreferredSize(new Dimension(1300, 700));
+        formPanel.setOpaque(false);
 
         JLabel titleLbl = new JLabel("Place Order");
         titleLbl.setFont(new Font("Tahoma", Font.BOLD, 24));
+        titleLbl.setForeground(Color.WHITE);
         titleLbl.setBounds(20, 20, 250, 30);
         titleLbl.setIcon(new ImageIcon("src/images/place order.png"));
-        getContentPane().add(titleLbl);
+        formPanel.add(titleLbl);
 
         JButton btnClose = new JButton("");
         btnClose.setIcon(new ImageIcon("src/images/close.png"));
-        btnClose.setBounds(1300, 20, 30, 30);
+        btnClose.setBounds(1250, 20, 30, 30);
         btnClose.addActionListener(e -> setVisible(false));
-        getContentPane().add(btnClose);
+        formPanel.add(btnClose);
 
         JLabel lblBillId = new JLabel("Bill ID: " + uuid);
         lblBillId.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblBillId.setForeground(Color.WHITE);
         lblBillId.setBounds(50, 80, 200, 20);
-        getContentPane().add(lblBillId);
+        formPanel.add(lblBillId);
 
         // Customer Details
         JLabel lblCD = new JLabel("Customer Details:");
         lblCD.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblCD.setForeground(Color.WHITE);
         lblCD.setBounds(50, 120, 200, 20);
-        getContentPane().add(lblCD);
+        formPanel.add(lblCD);
 
         JLabel lblName = new JLabel("Name");
+        lblName.setForeground(Color.WHITE);
         lblName.setBounds(50, 150, 200, 20);
-        getContentPane().add(lblName);
+        formPanel.add(lblName);
         nameTxt = new JTextField();
         nameTxt.setBounds(50, 170, 250, 30);
-        getContentPane().add(nameTxt);
+        formPanel.add(nameTxt);
 
         JLabel lblMobile = new JLabel("Mobile Number");
+        lblMobile.setForeground(Color.WHITE);
         lblMobile.setBounds(50, 210, 200, 20);
-        getContentPane().add(lblMobile);
+        formPanel.add(lblMobile);
         mobileTxt = new JTextField();
         mobileTxt.setBounds(50, 230, 250, 30);
-        getContentPane().add(mobileTxt);
+        formPanel.add(mobileTxt);
 
         JLabel lblEmail = new JLabel("Email");
+        lblEmail.setForeground(Color.WHITE);
         lblEmail.setBounds(50, 270, 200, 20);
-        getContentPane().add(lblEmail);
+        formPanel.add(lblEmail);
         emailTxt = new JTextField();
         emailTxt.setBounds(50, 290, 250, 30);
-        getContentPane().add(emailTxt);
+        formPanel.add(emailTxt);
 
         // Category & Product List
         JLabel lblCategory = new JLabel("Category");
+        lblCategory.setForeground(Color.WHITE);
         lblCategory.setBounds(350, 80, 200, 20);
-        getContentPane().add(lblCategory);
+        formPanel.add(lblCategory);
         
         categoryCombo = new JComboBox<>();
         categoryCombo.setBounds(350, 100, 250, 30);
         categoryCombo.addActionListener(e -> productByCategory((String)categoryCombo.getSelectedItem()));
-        getContentPane().add(categoryCombo);
+        formPanel.add(categoryCombo);
 
         productTableModel = new DefaultTableModel(new Object[]{"Name"}, 0);
         productTable = new JTable(productTableModel);
         JScrollPane scrollPane1 = new JScrollPane(productTable);
         scrollPane1.setBounds(350, 150, 250, 350);
-        getContentPane().add(scrollPane1);
+        formPanel.add(scrollPane1);
 
         productTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -138,24 +164,27 @@ public class PlaceOrderPage extends JFrame {
 
         // Product Details
         JLabel lblPName = new JLabel("Name");
+        lblPName.setForeground(Color.WHITE);
         lblPName.setBounds(650, 80, 100, 20);
-        getContentPane().add(lblPName);
+        formPanel.add(lblPName);
         pNameTxt = new JTextField();
         pNameTxt.setBounds(650, 100, 200, 30);
         pNameTxt.setEditable(false);
-        getContentPane().add(pNameTxt);
+        formPanel.add(pNameTxt);
 
         JLabel lblPPrice = new JLabel("Price");
+        lblPPrice.setForeground(Color.WHITE);
         lblPPrice.setBounds(880, 80, 100, 20);
-        getContentPane().add(lblPPrice);
+        formPanel.add(lblPPrice);
         pPriceTxt = new JTextField();
         pPriceTxt.setBounds(880, 100, 200, 30);
         pPriceTxt.setEditable(false);
-        getContentPane().add(pPriceTxt);
+        formPanel.add(pPriceTxt);
 
         JLabel lblPQuantity = new JLabel("Quantity");
+        lblPQuantity.setForeground(Color.WHITE);
         lblPQuantity.setBounds(650, 140, 100, 20);
-        getContentPane().add(lblPQuantity);
+        formPanel.add(lblPQuantity);
         pQuantityTxt = new JTextField();
         pQuantityTxt.setBounds(650, 160, 200, 30);
         pQuantityTxt.addKeyListener(new KeyAdapter() {
@@ -164,34 +193,35 @@ public class PlaceOrderPage extends JFrame {
                 calculateTotal();
             }
         });
-        getContentPane().add(pQuantityTxt);
+        formPanel.add(pQuantityTxt);
 
         JLabel lblPTotal = new JLabel("Total");
+        lblPTotal.setForeground(Color.WHITE);
         lblPTotal.setBounds(880, 140, 100, 20);
-        getContentPane().add(lblPTotal);
+        formPanel.add(lblPTotal);
         pTotalTxt = new JTextField();
         pTotalTxt.setBounds(880, 160, 200, 30);
         pTotalTxt.setEditable(false);
-        getContentPane().add(pTotalTxt);
+        formPanel.add(pTotalTxt);
 
         JButton btnClear = new JButton("Clear");
         btnClear.setIcon(new ImageIcon("src/images/clear.png"));
         btnClear.setBounds(650, 200, 100, 30);
         btnClear.addActionListener(e -> clearProductFields());
-        getContentPane().add(btnClear);
+        formPanel.add(btnClear);
 
         JButton btnAddToCart = new JButton("Add to Cart");
         btnAddToCart.setIcon(new ImageIcon("src/images/add to cart.png"));
         btnAddToCart.setBounds(930, 200, 150, 30);
         btnAddToCart.addActionListener(e -> addToCart());
-        getContentPane().add(btnAddToCart);
+        formPanel.add(btnAddToCart);
 
         // Cart Table
         cartTableModel = new DefaultTableModel(new Object[]{"Name", "Price", "Quantity", "Total"}, 0);
         cartTable = new JTable(cartTableModel);
         JScrollPane scrollPane2 = new JScrollPane(cartTable);
         scrollPane2.setBounds(650, 250, 430, 250);
-        getContentPane().add(scrollPane2);
+        formPanel.add(scrollPane2);
         
         cartTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -212,24 +242,23 @@ public class PlaceOrderPage extends JFrame {
         // Grand Total & Generate Bill
         JLabel gtLbl = new JLabel("Grand Total: $");
         gtLbl.setFont(new Font("Tahoma", Font.BOLD, 18));
+        gtLbl.setForeground(Color.WHITE);
         gtLbl.setBounds(650, 520, 150, 30);
-        getContentPane().add(gtLbl);
+        formPanel.add(gtLbl);
 
         lblGrandTotal = new JLabel("0");
         lblGrandTotal.setFont(new Font("Tahoma", Font.BOLD, 18));
+        lblGrandTotal.setForeground(Color.WHITE);
         lblGrandTotal.setBounds(800, 520, 100, 30);
-        getContentPane().add(lblGrandTotal);
+        formPanel.add(lblGrandTotal);
 
         JButton btnGenerateBill = new JButton("Generate Bill & Print");
         btnGenerateBill.setIcon(new ImageIcon("src/images/generate bill & print.png"));
         btnGenerateBill.setBounds(900, 520, 180, 30);
         btnGenerateBill.addActionListener(e -> generateBill());
-        getContentPane().add(btnGenerateBill);
+        formPanel.add(btnGenerateBill);
 
-        // Background Image
-        JLabel background = new JLabel(new ImageIcon("src/images/full-page-background.PNG"));
-        background.setBounds(0, 0, 1366, 768);
-        getContentPane().add(background);
+        bgPanel.add(formPanel);
 
         loadCategory();
     }

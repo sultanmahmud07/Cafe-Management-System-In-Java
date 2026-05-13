@@ -2,8 +2,6 @@ package com.java1234.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import com.java1234.dao.UserDao;
 import com.java1234.model.User;
@@ -18,7 +16,7 @@ public class SignupPage extends JFrame {
     private JPasswordField passwordTxt;
     private JTextField sqTxt;
     private JTextField answerTxt;
-    
+
     private DbUtil dbUtil = new DbUtil();
     private UserDao userDao = new UserDao();
 
@@ -166,7 +164,8 @@ public class SignupPage extends JFrame {
         String sq = sqTxt.getText();
         String answer = answerTxt.getText();
 
-        if (name.isEmpty() || email.isEmpty() || mobile.isEmpty() || address.isEmpty() || password.isEmpty() || sq.isEmpty() || answer.isEmpty()) {
+        if (name.isEmpty() || email.isEmpty() || mobile.isEmpty() || address.isEmpty() || password.isEmpty()
+                || sq.isEmpty() || answer.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please fill all fields!");
             return;
         }
